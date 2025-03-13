@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Premium Blog</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #4f46e5, #6d28d9);
+            background-size: 400% 400%;
+            animation: breathingEffect 6s ease infinite;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        @keyframes breathingEffect {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .blog-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 24px;
+            box-sizing: border-box;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+            transition: background 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        input:focus, textarea:focus {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        button {
+            background: linear-gradient(135deg, #4c1d95, #1e40af);
+            background-size: 300% 300%;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            animation: aggressiveBreathing 3s ease infinite;
+        }
+
+        @keyframes aggressiveBreathing {
+            0% { background-position: 0% 50%; transform: scale(1); }
+            50% { background-position: 100% 50%; transform: scale(1.05); }
+            100% { background-position: 0% 50%; transform: scale(1); }
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .blog-posts {
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-sizing: border-box;
+        }
+
+        .post {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            max-height: 160px;
+            box-sizing: border-box;
+        }
+
+        .post img {
+            width: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 12px;
+        }
+
+        .post h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .post p {
+            margin: 0;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.4;
+            display: none;
+        }
+
+        .post.expanded {
+            max-height: 1000px;
+            transform: scale(1.02);
+            transition: transform 0.3s ease;
+        }
+
+        .post.expanded p {
+            display: block;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #ff4d4d;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .delete-btn:hover {
+            background: #ff3333;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Write a Blog</h1>
+
+<div class="blog-container">
+    <input type="text" id="blogTitle" placeholder="Enter Blog Title" />
+    <input type="text" id="imageUrl" placeholder="Enter Image URL" />
+    <textarea id="blogText" rows="4" placeholder="Write your blog..."></textarea>
+    <button onclick="saveBlog()">Submit</button>
+</div>
+
+<h1>Your Blogs</h1>
+<div class="blog-posts" id="blogPosts"></div>
+
+<script>
+    const saveBlog = () => {
+        const title = document.getElementById('blogTitle').value;
+        const imageUrl = document.getElementById('imageUrl').value;
+        const blogText = document.getElementById('blogText').value;
+
+        if (!title || !imageUrl || !blogText) return alert('Please fill in all fields');
+
+        const blog = { title, imageUrl, blogText };
+        let blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+        blogs.push(blog);
+        localStorage.setItem('blogs', JSON.stringify(blogs));
+
+        displayBlogs();
+    };
+
+    const deleteBlog = (index) => {
+        let blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+        blogs.splice(index, 1);
+        localStorage.setItem('blogs', JSON.stringify(blogs));
+        displayBlogs();
+    };
+
+    const displayBlogs = () => {
+        const blogPostsContainer = document.getElementById('blogPosts');
+        blogPostsContainer.innerHTML = '';
+
+        const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+        blogs.forEach((blog, index) => {
+            const post = document.createElement('div');
+            post.classList.add('post');
+            post.innerHTML = `
+                <img src="${blog.imageUrl}" alt="Blog Image" />
+                <h3>${blog.title}</h3>
+                <p>${blog.blogText}</p>
+                <button class="delete-btn" onclick="deleteBlog(${index})">Delete</button>
+            `;
+            post.addEventListener('click', () => post.classList.toggle('expanded'));
+            blogPostsContainer.appendChild(post);
+        });
+    };
+
+    window.onload = displayBlogs;
+</script>
+<p>2025, Avishkar Kubal</p>
+</body>
+</html>
