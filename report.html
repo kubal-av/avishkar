@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Premium Comment Form</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #6b5eff, #d53cff, #ff4d6d, #1c1c3c);
+      background-size: 300% 300%;
+      animation: gradientBG 6s ease infinite;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .comment-container {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 30px;
+      border-radius: 16px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      width: 340px;
+      transition: transform 0.2s ease;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+      color: #f0f0ff;
+    }
+
+    /* Input Group */
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-group input,
+    .input-group textarea {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      border-radius: 10px;
+      outline: none;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-group input:focus,
+    .input-group textarea:focus {
+      border-color: #d53cff;
+      box-shadow: 0 0 12px rgba(213, 60, 255, 0.6);
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 16px;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    .input-group input:focus + label,
+    .input-group textarea:focus + label,
+    .input-group input:not(:placeholder-shown) + label,
+    .input-group textarea:not(:placeholder-shown) + label {
+      top: -10px;
+      left: 10px;
+      font-size: 14px;
+      color: #d53cff;
+    }
+
+    /* Submit Button */
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #6b5eff, #d53cff, #ff4d6d);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      background-size: 300% 300%;
+      animation: buttonGradient 4s ease infinite;
+    }
+
+    @keyframes buttonGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(213, 60, 255, 0.4);
+    }
+
+    /* Success Message */
+    .success-message {
+      display: none;
+      padding: 10px;
+      background: rgba(213, 60, 255, 0.15);
+      color: #d53cff;
+      border: 1px solid rgba(213, 60, 255, 0.4);
+      border-radius: 10px;
+      margin-top: 15px;
+      text-align: center;
+      font-weight: 500;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 400px) {
+      .comment-container {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="comment-container">
+    <h2>Report an Issue</h2>
+    <form id="commentForm">
+      <div class="input-group">
+        <input type="text" id="name" required placeholder=" " />
+        <label for="name">Your Name</label>
+      </div>
+      <div class="input-group">
+        <input type="email" id="email" required placeholder=" " />
+        <label for="email">Your Email</label>
+      </div>
+      <div class="input-group">
+        <textarea id="comment" required placeholder=" " rows="4"></textarea>
+        <label for="comment">Your Comment</label>
+      </div>
+      <button type="submit">Submit</button>
+      <p>2025, Avishkar Kubal</p>
+      <div class="success-message" id="successMessage">
+        ✔️ Comment submitted successfully!
+      </div>
+    </form>
+  </div>
+ 
+
+  <script>
+    document.getElementById('commentForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const successMessage = document.getElementById('successMessage');
+      successMessage.style.display = 'block';
+
+      setTimeout(() => {
+        successMessage.style.display = 'none';
+        document.getElementById('commentForm').reset();
+      }, 2500);
+    });
+  </script>
+
+</body>
+</html>
