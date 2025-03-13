@@ -537,6 +537,37 @@
     </div>
     
     </div>
+        <div style="text-align: center; margin-top: 20px;">
+  <button onclick="location.href='report.html'" 
+    style="
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #6b5eff, #d53cff, #ff4d6d);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      background-size: 300% 300%;
+      animation: buttonGradient 4s ease infinite;
+      box-shadow: 0 8px 20px rgba(213, 60, 255, 0.4);
+    "
+    onmouseover="this.style.transform='translateY(-2px)'"
+    onmouseout="this.style.transform='translateY(0)'">
+    Report an Issue
+  </button>
+</div>
+
+<!-- Keyframe animation added inline -->
+<style>
+  @keyframes buttonGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
     
     <script>
     // Toggle Mute Function
