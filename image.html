@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            background-size: 400% 400%;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            animation: backgroundMove 8s ease infinite;
+        }
+
+        @keyframes backgroundMove {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 22px;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+            color: #333;
+        }
+
+        input {
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            background-size: 200% 200%;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            animation: buttonBreathing 3s ease infinite;
+        }
+
+        @keyframes buttonBreathing {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            margin-top: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Image Downloader</h2>
+    <input type="text" id="imageUrl" placeholder="Enter image URL" />
+    <button onclick="downloadImage()">Download Image</button>
+    <button onclick="saveImage()">Save to Device</button>
+    <img id="previewImage" style="display: none;" />
+</div>
+
+<script>
+function downloadImage() {
+    const url = document.getElementById('imageUrl').value;
+    if (url) {
+        fetch(url)
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'downloaded_image.jpg';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+
+                // Preview image
+                const image = document.getElementById('previewImage');
+                image.src = URL.createObjectURL(blob);
+                image.style.display = 'block';
+            })
+            .catch(() => alert('Failed to download image. Please check the URL.'));
+    } else {
+        alert('Please enter a valid image URL');
+    }
+}
+
+function saveImage() {
+    const image = document.getElementById('previewImage');
+    if (image.src) {
+        const link = document.createElement('a');
+        link.href = image.src;
+        link.download = 'saved_image.jpg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } else {
+        alert('No image to save. Please download one first.');
+    }
+}
+</script>
+
+</body>
+</html>

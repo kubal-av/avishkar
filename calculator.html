@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scientific Calculator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #4f46e5, #6d28d9);
+            background-size: 400% 400%;
+            animation: breathingEffect 6s ease infinite;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes breathingEffect {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            width: 360px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-size: 18px;
+            text-align: right;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #4c1d95, #1e40af);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            animation: aggressiveBreathing 3s ease infinite;
+        }
+
+        @keyframes aggressiveBreathing {
+            0% { background-position: 0% 50%; transform: scale(1); }
+            50% { background-position: 100% 50%; transform: scale(1.05); }
+            100% { background-position: 0% 50%; transform: scale(1); }
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .operator {
+            background: #6d28d9;
+        }
+
+        .clear {
+            background: #d32f2f;
+        }
+
+        .equal {
+            background: #4caf50;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Scientific Calculator</h1>
+    <input type="text" id="result" readonly />
+    <div class="buttons">
+        <button onclick="clearResult()" class="clear">C</button>
+        <button onclick="deleteLast()">←</button>
+        <button onclick="appendValue('%')">%</button>
+        <button onclick="appendValue('/')">÷</button>
+        <button onclick="calculateResult()" class="equal">=</button>
+
+        <button onclick="appendValue('7')">7</button>
+        <button onclick="appendValue('8')">8</button>
+        <button onclick="appendValue('9')">9</button>
+        <button onclick="appendValue('*')">×</button>
+        <button onclick="appendValue('-')">−</button>
+
+        <button onclick="appendValue('4')">4</button>
+        <button onclick="appendValue('5')">5</button>
+        <button onclick="appendValue('6')">6</button>
+        <button onclick="appendValue('+')">+</button>
+        <button onclick="appendValue('Math.sqrt(')">√</button>
+
+        <button onclick="appendValue('1')">1</button>
+        <button onclick="appendValue('2')">2</button>
+        <button onclick="appendValue('3')">3</button>
+        <button onclick="appendPower()">x<sup>y</sup></button>
+        <button onclick="appendValue('Math.log10(')">log</button>
+
+        <button onclick="appendValue('0')">0</button>
+        <button onclick="appendValue('.')">.</button>
+        <button onclick="appendValue('Math.sin(')">sin</button>
+        <button onclick="appendValue('Math.cos(')">cos</button>
+        <button onclick="appendValue('Math.tan(')">tan</button>
+
+        <!-- Parentheses Buttons -->
+        <button onclick="appendValue('(')">(</button>
+        <button onclick="appendValue(')')">)</button>
+    </div>
+</div>
+
+<script>
+    function appendValue(value) {
+        document.getElementById('result').value += value;
+    }
+
+    function clearResult() {
+        document.getElementById('result').value = '';
+    }
+
+    function deleteLast() {
+        let currentValue = document.getElementById('result').value;
+        document.getElementById('result').value = currentValue.slice(0, -1);
+    }
+
+    function appendPower() {
+        let value = document.getElementById('result').value;
+        if (value) {
+            document.getElementById('result').value += '**';
+        }
+    }
+
+    function calculateResult() {
+        try {
+            let expression = document.getElementById('result').value
+                .replace(/%/g, '/100')
+                .replace(/Math.sqrt/g, 'Math.sqrt')
+                .replace(/Math.pow/g, 'Math.pow')
+                .replace(/Math.log10/g, 'Math.log10')
+                .replace(/Math.sin/g, 'Math.sin')
+                .replace(/Math.cos/g, 'Math.cos')
+                .replace(/Math.tan/g, 'Math.tan');
+
+            let result = eval(expression);
+            if (!isFinite(result)) throw new Error('Invalid calculation');
+            document.getElementById('result').value = result;
+        } catch (error) {
+            alert('Invalid Calculation');
+            clearResult();
+        }
+    }
+</script>
+
+</body>
+</html>
