@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Premium Video Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            background-size: 400% 400%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            animation: backgroundMove 8s ease infinite;
+            margin: 0;
+        }
+
+        @keyframes backgroundMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+        }
+
+        input, button, video, iframe {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            transition: 0.3s ease;
+        }
+
+        input::file-selector-button {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        button {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            animation: buttonBreathing 3s ease infinite;
+            transition: transform 0.2s ease;
+        }
+
+        @keyframes buttonBreathing {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+        }
+
+        video, iframe {
+            max-height: 300px;
+            border-radius: 12px;
+            width: 100%;
+            transition: 0.3s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .controls button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Video Player</h2>
+    <input type="text" id="videoURL" placeholder="Paste video link (YouTube, etc.)" />
+    <button onclick="loadVideo()">Load Video</button>
+    
+    <input type="file" id="videoFile" accept="video/*" onchange="loadLocalVideo()" />
+    
+    <video id="localVideo" class="hidden" controls></video>
+    <iframe id="onlineVideo" class="hidden" allowfullscreen></iframe>
+    
+    <div class="controls hidden" id="videoControls">
+        <button onclick="toggleMute()">Mute/Unmute</button>
+        <button onclick="toggleFullscreen()">Fullscreen</button>
+    </div>
+    <p>2025, Avishkar Kubal</p>
+</div>
+
+<script>
+function loadVideo() {
+    const url = document.getElementById('videoURL').value;
+    const iframe = document.getElementById('onlineVideo');
+    const video = document.getElementById('localVideo');
+    const controls = document.getElementById('videoControls');
+
+    if (url) {
+        let embedURL = convertToEmbedURL(url);
+        if (embedURL) {
+            iframe.src = embedURL;
+            iframe.classList.remove('hidden');
+            video.classList.add('hidden');
+            controls.classList.add('hidden'); // No controls for iframe
+        } else {
+            alert('Invalid video URL');
+        }
+    } else {
+        alert('Please enter a video URL');
+    }
+}
+
+function convertToEmbedURL(url) {
+    if (url.includes("youtube.com") || url.includes("youtu.be")) {
+        let videoID = url.split("v=")[1] || url.split("/")[3];
+        let ampersandPosition = videoID.indexOf("&");
+        if (ampersandPosition !== -1) {
+            videoID = videoID.substring(0, ampersandPosition);
+        }
+        return `https://www.youtube.com/embed/${videoID}`;
+    }
+    return null;
+}
+
+function loadLocalVideo() {
+    const file = document.getElementById('videoFile').files[0];
+    const video = document.getElementById('localVideo');
+    const iframe = document.getElementById('onlineVideo');
+    const controls = document.getElementById('videoControls');
+
+    if (file) {
+        const url = URL.createObjectURL(file);
+        video.src = url;
+        video.classList.remove('hidden');
+        iframe.classList.add('hidden');
+        controls.classList.remove('hidden');
+    }
+}
+
+function toggleMute() {
+    const video = document.getElementById('localVideo');
+    if (!video.classList.contains('hidden')) {
+        video.muted = !video.muted;
+    }
+}
+
+function toggleFullscreen() {
+    const video = document.getElementById('localVideo');
+    if (!video.classList.contains('hidden')) {
+        if (!document.fullscreenElement) {
+            video.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    }
+}
+</script>
+
+</body>
+</html>
